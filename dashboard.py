@@ -15,7 +15,7 @@ def generate_dashboard(stats, queries):
     for p in stats["recent_listings"]:
         brand, size, price, query, image, link = p
         product_cards += f"""
-        <a href="{link}" target="_blank" class="card">
+        <a href="{link}" target="_blank" class="card" data-query="{query}">
             <img src="{image}" alt="{brand}" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
             <div class="card-info">
                 <span class="brand">{brand}</span>
@@ -55,12 +55,18 @@ def generate_dashboard(stats, queries):
   .size {{ display: block; color: #888; font-size: 13px; margin-top: 2px; }}
   .price {{ display: block; font-weight: 700; color: #ff2300; margin-top: 4px; }}
   .query-tag {{ display: inline-block; margin-top: 8px; background: #f0f0f0; border-radius: 20px; padding: 2px 10px; font-size: 11px; color: #555; }}
+  .filters {{ display: flex; gap: 12px; padding: 0 32px 24px; flex-wrap: wrap; align-items: center; }}
+  .filter-btn {{ background: white; border: 1.5px solid #ddd; border-radius: 20px; padding: 6px 16px; font-size: 13px; cursor: pointer; transition: all 0.2s; }}
+  .filter-btn:hover {{ border-color: #ff2300; color: #ff2300; }}
+  .filter-btn.active {{ background: #ff2300; color: white; border-color: #ff2300; }}
+  .filter-label {{ font-size: 13px; color: #888; margin-right: 4px; }}
+  .card.hidden {{ display: none; }}
 </style>
 </head>
 <body>
 <header>
   <h1>Depop Trend Dashboard</h1>
-  <p>{stats['total']} listings tracked &nbsp;·&nbsp; {stats['total_sold']} sold detected &nbsp;·&nbsp; Updates daily</p>
+    <p>{stats['total']} listings tracked &nbsp;·&nbsp; {stats['total_sold']} sold detected &nbsp;·&nbsp; Last updated: {stats['last_updated']}</p>
 </header>
 
 <div class="stats">
@@ -78,6 +84,12 @@ def generate_dashboard(stats, queries):
   </div>
   <div class="chart-box"><h2>Top Brands</h2><canvas id="brandsChart"></canvas></div>
   <div class="chart-box"><h2>Average Price by Category</h2><canvas id="priceChart"></canvas></div>
+</div>
+
+<div class="filters">
+  <span class="filter-label">Filter by:</span>
+  <button class="filter-btn active" onclick="filterCards('all')">All</button>
+  {''.join(f'<button class="filter-btn" onclick="filterCards({json.dumps(q)})">{q}</button>' for q in queries)}
 </div>
 
 <div class="section-title">Recent Listings</div>
@@ -106,6 +118,17 @@ def generate_dashboard(stats, queries):
     data: {{ labels: {json.dumps(avg_price_labels)}, datasets: [{{ data: {json.dumps(avg_price_values)}, backgroundColor: '#ff2300', label: 'Avg $' }}] }},
     options: {{ plugins: {{ legend: {{ display: false }} }}, scales: {{ x: {{ ticks: {{ maxRotation: 45 }} }}, y: {{ ticks: {{ callback: v => '$' + v }} }} }} }}
   }});
+  function filterCards(query) {{
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    document.querySelectorAll('.card').forEach(card => {{
+      if (query === 'all' || card.dataset.query === query) {{
+        card.classList.remove('hidden');
+      }} else {{
+        card.classList.add('hidden');
+      }}
+    }});
+  }}
 </script>
 </body>
 </html>"""

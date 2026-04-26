@@ -150,13 +150,16 @@ def get_stats():
     
     conn.close()
     
+    from datetime import datetime
+
     return {
         "sell_through": sell_through,
         "top_brands": top_brands,
         "avg_prices": avg_prices,
         "total": total,
         "total_sold": total_sold,
-        "recent_listings": recent
+        "recent_listings": recent,
+        "last_updated": datetime.now().strftime("%B %d, %Y at %I:%M %p")
     }
 
 if __name__ == "__main__":

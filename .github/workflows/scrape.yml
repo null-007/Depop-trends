@@ -28,6 +28,22 @@ jobs:
       - name: Run scraper with virtual display
         run: xvfb-run python scraper.py
       
+      - name: Check scrape results
+        run: |
+          python3 -c "
+          import sqlite3
+          from datetime import datetime
+          conn = sqlite3.connect('depop.db')
+          today = datetime.now().strftime('%Y-%m-%d')
+          count = conn.execute('SELECT COUNT(*) FROM listings WHERE last_seen = ?', (today,)).fetchone()[0]
+          conn.close()
+          if count < 10:
+              print('WARNING: Only', count, 'listings found today — scraper may be broken')
+              exit(1)
+          else:
+              print('Scrape healthy:', count, 'listings found')
+          "
+      
       - name: Commit and push updated dashboard
         run: |
           git config user.email "117118203+null-007@users.noreply.github.com"

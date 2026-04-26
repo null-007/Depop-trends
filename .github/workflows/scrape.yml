@@ -34,4 +34,5 @@ jobs:
           git config user.name "null-007"
           git add index.html depop_results.csv depop.db
           git commit -m "Daily scrape $(date +%Y-%m-%d)" || echo "No changes"
+          git pull origin main --rebase
           git push

@@ -161,6 +161,24 @@ def get_stats():
         "recent_listings": recent,
         "last_updated": datetime.now().strftime("%B %d, %Y at %I:%M %p")
     }
-
+def get_trending_categories():
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    # only consider categories with at least 5 tracked listings
+    cursor.execute("""
+        SELECT query,
+               COUNT(*) as total,
+               SUM(CASE WHEN status = 'sold' THEN 1 ELSE 0 END) as sold,
+               ROUND(SUM(CASE WHEN status = 'sold' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 1) as rate
+        FROM listings
+        GROUP BY query
+        HAVING total >= 5
+        ORDER BY rate DESC
+        LIMIT 3
+    """)
+    results = cursor.fetchall()
+    conn.close()
+    return results
 if __name__ == "__main__":
     setup_database()

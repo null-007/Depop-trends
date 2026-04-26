@@ -1,7 +1,7 @@
 from playwright.sync_api import sync_playwright
 import time
 import re
-from database import setup_database, upsert_listing, mark_sold_listings, get_stats
+from database import setup_database, upsert_listing, mark_sold_listings, get_stats, get_trending_categories
 from dashboard import generate_dashboard
 
 QUERIES = [

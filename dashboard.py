@@ -1,6 +1,17 @@
 import json
+from database import get_trending_categories
+
 
 def generate_dashboard(stats, queries):
+    trending = get_trending_categories()
+    
+    if trending:
+        trending_html = "".join([
+            f'<div><strong>{r[0]}</strong> &nbsp;<span style="color:#ff2300;font-weight:700">{r[3]}% sold</span> <span style="color:#888;font-size:12px">({r[2]} of {r[1]})</span></div>'
+            for r in trending
+        ])
+    else:
+        trending_html = '<div style="color:#888;font-size:13px">Not enough data yet — check back after a few days of tracking.</div>'
     sell_through_labels = [r[0] for r in stats["sell_through"]]
     sell_through_rates = [
         round((r[2] / r[1] * 100), 1) if r[1] > 0 else 0 
@@ -67,6 +78,12 @@ def generate_dashboard(stats, queries):
 <header>
   <h1>Depop Trend Dashboard</h1>
     <p>{stats['total']} listings tracked &nbsp;·&nbsp; {stats['total_sold']} sold detected &nbsp;·&nbsp; Last updated: {stats['last_updated']}</p>
+    <div style="background: #fff8f7; border-left: 4px solid #ff2300; margin: 24px 32px 0; padding: 16px 20px; border-radius: 8px;">
+  <div style="font-weight: 700; font-size: 14px; color: #ff2300; margin-bottom: 8px;">🔥 Hot right now</div>
+  <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+    {trending_html}
+  </div>
+</div>
 </header>
 
 <div class="stats">

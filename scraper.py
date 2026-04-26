@@ -194,9 +194,9 @@ def generate_dashboard(all_products, stats):
 </body>
 </html>"""
 
-    with open("dashboard.html", "w") as f:
+    with open("index.html", "w") as f:
         f.write(html)
-    print("Dashboard saved to dashboard.html — open it in your browser!")
+    print("Dashboard saved to index.html — open it in your browser!")
 
 def main():
     all_products = []

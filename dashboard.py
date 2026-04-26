@@ -106,7 +106,7 @@ def generate_dashboard(stats, queries):
 <div class="filters">
   <span class="filter-label">Filter by:</span>
   <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
-  {''.join(f'<button class="filter-btn" onclick="filterCards({json.dumps(q)}, this)">{q}</button>' for q in queries)}
+    {''.join(f"<button class='filter-btn' onclick=\"filterCards('{q}', this)\">{q}</button>" for q in queries)}
 </div>
 
 <div class="section-title">Recent Listings</div>

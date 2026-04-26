@@ -1,0 +1,115 @@
+import json
+
+def generate_dashboard(stats, queries):
+    sell_through_labels = [r[0] for r in stats["sell_through"]]
+    sell_through_rates = [
+        round((r[2] / r[1] * 100), 1) if r[1] > 0 else 0 
+        for r in stats["sell_through"]
+    ]
+    top_brand_labels = [r[0] for r in stats["top_brands"]]
+    top_brand_values = [r[1] for r in stats["top_brands"]]
+    avg_price_labels = [r[0] for r in stats["avg_prices"]]
+    avg_price_values = [round(r[1], 2) if r[1] else 0 for r in stats["avg_prices"]]
+
+    product_cards = ""
+    for p in stats["recent_listings"]:
+        brand, size, price, query, image, link = p
+        product_cards += f"""
+        <a href="{link}" target="_blank" class="card">
+            <img src="{image}" alt="{brand}" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">{brand}</span>
+                <span class="size">{size}</span>
+                <span class="price">{price}</span>
+                <span class="query-tag">{query}</span>
+            </div>
+        </a>"""
+
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Depop Trend Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+  body {{ font-family: -apple-system, sans-serif; background: #f5f5f5; color: #222; }}
+  header {{ background: #ff2300; color: white; padding: 24px 32px; }}
+  header h1 {{ font-size: 28px; font-weight: 700; }}
+  header p {{ opacity: 0.85; margin-top: 4px; }}
+  .stats {{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 24px 32px; }}
+  .stat {{ background: white; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }}
+  .stat .number {{ font-size: 36px; font-weight: 700; color: #ff2300; }}
+  .stat .label {{ color: #666; margin-top: 4px; font-size: 14px; }}
+  .charts {{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 0 32px 24px; }}
+  .chart-box {{ background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }}
+  .chart-box h2 {{ font-size: 16px; font-weight: 600; margin-bottom: 16px; }}
+  .sell-through-note {{ font-size: 12px; color: #888; margin-top: 8px; }}
+  .section-title {{ padding: 0 32px 16px; font-size: 20px; font-weight: 700; }}
+  .grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; padding: 0 32px 32px; }}
+  .card {{ background: white; border-radius: 12px; overflow: hidden; text-decoration: none; color: inherit; box-shadow: 0 1px 4px rgba(0,0,0,0.08); transition: transform 0.2s; }}
+  .card:hover {{ transform: translateY(-4px); }}
+  .card img {{ width: 100%; height: 200px; object-fit: cover; }}
+  .card-info {{ padding: 12px; }}
+  .brand {{ display: block; font-weight: 600; font-size: 14px; }}
+  .size {{ display: block; color: #888; font-size: 13px; margin-top: 2px; }}
+  .price {{ display: block; font-weight: 700; color: #ff2300; margin-top: 4px; }}
+  .query-tag {{ display: inline-block; margin-top: 8px; background: #f0f0f0; border-radius: 20px; padding: 2px 10px; font-size: 11px; color: #555; }}
+</style>
+</head>
+<body>
+<header>
+  <h1>Depop Trend Dashboard</h1>
+  <p>{stats['total']} listings tracked &nbsp;·&nbsp; {stats['total_sold']} sold detected &nbsp;·&nbsp; Updates daily</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="number">{stats['total']}</div><div class="label">Total Tracked</div></div>
+  <div class="stat"><div class="number">{stats['total_sold']}</div><div class="label">Sold Detected</div></div>
+  <div class="stat"><div class="number">{round(stats['total_sold'] / stats['total'] * 100, 1) if stats['total'] > 0 else 0}%</div><div class="label">Overall Sell-Through</div></div>
+  <div class="stat"><div class="number">{len(stats['top_brands'])}</div><div class="label">Unique Brands</div></div>
+</div>
+
+<div class="charts">
+  <div class="chart-box">
+    <h2>Sell-Through Rate by Category</h2>
+    <canvas id="sellThroughChart"></canvas>
+    <p class="sell-through-note">% of tracked listings that have sold. More accurate over time.</p>
+  </div>
+  <div class="chart-box"><h2>Top Brands</h2><canvas id="brandsChart"></canvas></div>
+  <div class="chart-box"><h2>Average Price by Category</h2><canvas id="priceChart"></canvas></div>
+</div>
+
+<div class="section-title">Recent Listings</div>
+<div class="grid">{product_cards}</div>
+
+<script>
+  new Chart(document.getElementById('sellThroughChart'), {{
+    type: 'bar',
+    data: {{ 
+      labels: {json.dumps(sell_through_labels)}, 
+      datasets: [{{ 
+        data: {json.dumps(sell_through_rates)}, 
+        backgroundColor: '#ff2300',
+        label: 'Sell-through %'
+      }}] 
+    }},
+    options: {{ plugins: {{ legend: {{ display: false }} }}, scales: {{ y: {{ max: 100, ticks: {{ callback: v => v + '%' }} }} }} }}
+  }});
+  new Chart(document.getElementById('brandsChart'), {{
+    type: 'bar',
+    data: {{ labels: {json.dumps(top_brand_labels)}, datasets: [{{ data: {json.dumps(top_brand_values)}, backgroundColor: '#222' }}] }},
+    options: {{ plugins: {{ legend: {{ display: false }} }}, scales: {{ x: {{ ticks: {{ maxRotation: 45 }} }} }} }}
+  }});
+  new Chart(document.getElementById('priceChart'), {{
+    type: 'bar',
+    data: {{ labels: {json.dumps(avg_price_labels)}, datasets: [{{ data: {json.dumps(avg_price_values)}, backgroundColor: '#ff2300', label: 'Avg $' }}] }},
+    options: {{ plugins: {{ legend: {{ display: false }} }}, scales: {{ x: {{ ticks: {{ maxRotation: 45 }} }}, y: {{ ticks: {{ callback: v => '$' + v }} }} }} }}
+  }});
+</script>
+</body>
+</html>"""
+
+    with open("index.html", "w") as f:
+        f.write(html)
+    print("Dashboard saved to index.html")

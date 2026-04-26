@@ -32,6 +32,6 @@ jobs:
         run: |
           git config user.email "117118203+null-007@users.noreply.github.com"
           git config user.name "null-007"
-          git add index.html depop_results.csv
+          git add index.html depop_results.csv depop.db
           git commit -m "Daily scrape $(date +%Y-%m-%d)" || echo "No changes"
           git push

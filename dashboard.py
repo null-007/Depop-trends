@@ -105,8 +105,8 @@ def generate_dashboard(stats, queries):
 
 <div class="filters">
   <span class="filter-label">Filter by:</span>
-  <button class="filter-btn active" onclick="filterCards('all')">All</button>
-  {''.join(f'<button class="filter-btn" onclick="filterCards({json.dumps(q)})">{q}</button>' for q in queries)}
+  <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+  {''.join(f'<button class="filter-btn" onclick="filterCards({json.dumps(q)}, this)">{q}</button>' for q in queries)}
 </div>
 
 <div class="section-title">Recent Listings</div>
@@ -135,9 +135,9 @@ def generate_dashboard(stats, queries):
     data: {{ labels: {json.dumps(avg_price_labels)}, datasets: [{{ data: {json.dumps(avg_price_values)}, backgroundColor: '#ff2300', label: 'Avg $' }}] }},
     options: {{ plugins: {{ legend: {{ display: false }} }}, scales: {{ x: {{ ticks: {{ maxRotation: 45 }} }}, y: {{ ticks: {{ callback: v => '$' + v }} }} }} }}
   }});
-  function filterCards(query) {{
-    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+  function filterCards(query, btn) {{
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
     document.querySelectorAll('.card').forEach(card => {{
       if (query === 'all' || card.dataset.query === query) {{
         card.classList.remove('hidden');

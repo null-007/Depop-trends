@@ -39,7 +39,7 @@
 <body>
 <header>
   <h1>Depop Trend Dashboard</h1>
-    <p>178 listings tracked &nbsp;·&nbsp; 0 sold detected &nbsp;·&nbsp; Last updated: April 26, 2026 at 03:11 PM</p>
+    <p>182 listings tracked &nbsp;·&nbsp; 0 sold detected &nbsp;·&nbsp; Last updated: April 26, 2026 at 03:17 PM</p>
     <div style="background: #fff8f7; border-left: 4px solid #ff2300; margin: 24px 32px 0; padding: 16px 20px; border-radius: 8px;">
   <div style="font-weight: 700; font-size: 14px; color: #ff2300; margin-bottom: 8px;">🔥 Hot right now</div>
   <div style="display: flex; gap: 24px; flex-wrap: wrap;">
@@ -49,7 +49,7 @@
 </header>
 
 <div class="stats">
-  <div class="stat"><div class="number">178</div><div class="label">Total Tracked</div></div>
+  <div class="stat"><div class="number">182</div><div class="label">Total Tracked</div></div>
   <div class="stat"><div class="number">0</div><div class="label">Sold Detected</div></div>
   <div class="stat"><div class="number">0.0%</div><div class="label">Overall Sell-Through</div></div>
   <div class="stat"><div class="number">10</div><div class="label">Unique Brands</div></div>
@@ -67,8 +67,8 @@
 
 <div class="filters">
   <span class="filter-label">Filter by:</span>
-  <button class="filter-btn active" onclick="filterCards('all')">All</button>
-  <button class="filter-btn" onclick="filterCards("vintage shirts")">vintage shirts</button><button class="filter-btn" onclick="filterCards("vintage jeans")">vintage jeans</button><button class="filter-btn" onclick="filterCards("vintage jacket")">vintage jacket</button><button class="filter-btn" onclick="filterCards("y2k top")">y2k top</button><button class="filter-btn" onclick="filterCards("baggy jeans")">baggy jeans</button><button class="filter-btn" onclick="filterCards("vintage hoodie")">vintage hoodie</button><button class="filter-btn" onclick="filterCards("cargo pants")">cargo pants</button><button class="filter-btn" onclick="filterCards("band tee")">band tee</button>
+  <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+  <button class="filter-btn" onclick="filterCards("vintage shirts", this)">vintage shirts</button><button class="filter-btn" onclick="filterCards("vintage jeans", this)">vintage jeans</button><button class="filter-btn" onclick="filterCards("vintage jacket", this)">vintage jacket</button><button class="filter-btn" onclick="filterCards("y2k top", this)">y2k top</button><button class="filter-btn" onclick="filterCards("baggy jeans", this)">baggy jeans</button><button class="filter-btn" onclick="filterCards("vintage hoodie", this)">vintage hoodie</button><button class="filter-btn" onclick="filterCards("cargo pants", this)">cargo pants</button><button class="filter-btn" onclick="filterCards("band tee", this)">band tee</button>
 </div>
 
 <div class="section-title">Recent Listings</div>
@@ -521,17 +521,17 @@
   });
   new Chart(document.getElementById('brandsChart'), {
     type: 'bar',
-    data: { labels: ["American Vintage", "Levi's", "Garage", "Old Navy", "Brandy Melville", "Gildan", "Edikted", "American Eagle Outfitters", "Tommy Hilfiger", "Polo Ralph Lauren"], datasets: [{ data: [15, 8, 8, 6, 5, 4, 4, 4, 3, 3], backgroundColor: '#222' }] },
+    data: { labels: ["American Vintage", "Levi's", "Garage", "Old Navy", "Brandy Melville", "Gildan", "Edikted", "American Eagle Outfitters", "Abercrombie & Fitch", "Tommy Hilfiger"], datasets: [{ data: [16, 8, 8, 6, 5, 4, 4, 4, 4, 3], backgroundColor: '#222' }] },
     options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { maxRotation: 45 } } } }
   });
   new Chart(document.getElementById('priceChart'), {
     type: 'bar',
-    data: { labels: ["vintage jacket", "vintage hoodie", "baggy jeans", "vintage jeans", "vintage shirts", "y2k top", "cargo pants", "band tee"], datasets: [{ data: [33.11, 21.55, 20.91, 20.51, 17.82, 13.05, 10.83, 9.2], backgroundColor: '#ff2300', label: 'Avg $' }] },
+    data: { labels: ["vintage jacket", "vintage hoodie", "vintage jeans", "baggy jeans", "vintage shirts", "y2k top", "cargo pants", "band tee"], datasets: [{ data: [33.18, 21.09, 20.51, 20.5, 17.82, 13.05, 10.83, 9.2], backgroundColor: '#ff2300', label: 'Avg $' }] },
     options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { maxRotation: 45 } }, y: { ticks: { callback: v => '$' + v } } } }
   });
-  function filterCards(query) {
-    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+  function filterCards(query, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
     document.querySelectorAll('.card').forEach(card => {
       if (query === 'all' || card.dataset.query === query) {
         card.classList.remove('hidden');

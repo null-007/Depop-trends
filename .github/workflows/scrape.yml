@@ -1,0 +1,37 @@
+name: Daily Depop Scrape
+
+on:
+  schedule:
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install playwright curl_cffi beautifulsoup4
+          playwright install chromium
+          playwright install-deps chromium
+          sudo apt-get install -y xvfb
+      
+      - name: Run scraper with virtual display
+        run: xvfb-run python scraper.py
+      
+      - name: Commit and push updated dashboard
+        run: |
+          git config user.email "117118203+null-007@users.noreply.github.com"
+          git config user.name "null-007"
+          git add index.html depop_results.csv
+          git commit -m "Daily scrape $(date +%Y-%m-%d)" || echo "No changes"
+          git push

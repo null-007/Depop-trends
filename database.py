@@ -147,6 +147,14 @@ def get_stats():
         LIMIT 48
     """)
     recent = cursor.fetchall()
+    cursor.execute("""
+        SELECT brand, size, price, query, image, link
+        FROM listings
+        WHERE status = 'sold'
+        ORDER BY last_seen DESC
+        LIMIT 48
+    """)
+    sold_listings = cursor.fetchall()
     
     conn.close()
     
@@ -159,6 +167,7 @@ def get_stats():
         "total": total,
         "total_sold": total_sold,
         "recent_listings": recent,
+        "sold_listings": sold_listings,
         "last_updated": datetime.now().strftime("%B %d, %Y at %I:%M %p")
     }
 def get_trending_categories():

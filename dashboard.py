@@ -43,6 +43,20 @@ def generate_dashboard(stats, queries):
             </div>
         </a>"""
 
+    sold_cards = ""
+    for p in stats["sold_listings"]:
+        brand, size, price, query, image, link = p
+        sold_cards += f"""
+        <a href="{link}" target="_blank" class="card" data-query="{query}">
+            <img src="{image}" alt="{brand}" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">{brand}</span>
+                <span class="size">{size}</span>
+                <span class="price" style="color:#888;text-decoration:line-through">{price}</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>"""
+
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -79,6 +93,11 @@ def generate_dashboard(stats, queries):
   .filter-btn.active {{ background: #ff2300; color: white; border-color: #ff2300; }}
   .filter-label {{ font-size: 13px; color: #888; margin-right: 4px; }}
   .card.hidden {{ display: none; }}
+  .tabs {{ display: flex; gap: 0; padding: 24px 32px 0; }}
+  .tab {{ padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 8px 8px 0 0; background: #e0e0e0; color: #666; border: none; }}
+  .tab.active {{ background: white; color: #ff2300; }}
+  .tab-content {{ display: none; }}
+  .tab-content.active {{ display: block; }}
 </style>
 </head>
 <body>
@@ -110,14 +129,25 @@ def generate_dashboard(stats, queries):
   <div class="chart-box"><h2>Average Price by Category</h2><canvas id="priceChart"></canvas></div>
 </div>
 
-<div class="filters">
-  <span class="filter-label">Filter by:</span>
-  <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
-    {get_filter_buttons(queries)}
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('available', this)">Available Listings</button>
+  <button class="tab" onclick="switchTab('sold', this)">Sold Listings ({stats['total_sold']})</button>
 </div>
 
-<div class="section-title">Recent Listings</div>
-<div class="grid">{product_cards}</div>
+<div id="available" class="tab-content active">
+  <div class="filters" style="padding-top: 16px;">
+    <span class="filter-label">Filter by:</span>
+    <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+    {get_filter_buttons(queries)}
+  </div>
+  <div class="section-title" style="padding-top: 16px;">Recent Listings</div>
+  <div class="grid" id="available-grid">{product_cards}</div>
+</div>
+
+<div id="sold" class="tab-content">
+  <div class="section-title" style="padding: 24px 32px 16px;">Sold Listings</div>
+  <div class="grid">{sold_cards}</div>
+</div>
 
 <script>
   new Chart(document.getElementById('sellThroughChart'), {{

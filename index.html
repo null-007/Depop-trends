@@ -44,21 +44,21 @@
 <body>
 <header>
   <h1>Depop Trend Dashboard</h1>
-  <p>324 listings tracked &nbsp;·&nbsp; 159 sold detected &nbsp;·&nbsp; Last updated: April 27, 2026 at 12:11 PM</p>
+  <p>336 listings tracked &nbsp;·&nbsp; 159 sold detected &nbsp;·&nbsp; Last updated: April 27, 2026 at 12:26 PM</p>
 </header>
 
 <div style="background: #fff8f7; border-left: 4px solid #ff2300; margin: 24px 32px 0; padding: 16px 20px; border-radius: 8px;">
   <div style="font-weight: 700; font-size: 14px; color: #ff2300; margin-bottom: 8px;">🔥 Hot right now</div>
   <div style="display: flex; gap: 24px; flex-wrap: wrap;">
-    <div><strong>vintage shirts</strong> &nbsp;<span style="color:#ff2300;font-weight:700">55.0% sold</span> <span style="color:#888;font-size:12px">(22 of 40)</span></div><div><strong>vintage jacket</strong> &nbsp;<span style="color:#ff2300;font-weight:700">51.2% sold</span> <span style="color:#888;font-size:12px">(22 of 43)</span></div><div><strong>y2k top</strong> &nbsp;<span style="color:#ff2300;font-weight:700">50.0% sold</span> <span style="color:#888;font-size:12px">(21 of 42)</span></div>
+    <div><strong>vintage shirts</strong> &nbsp;<span style="color:#ff2300;font-weight:700">53.7% sold</span> <span style="color:#888;font-size:12px">(22 of 41)</span></div><div><strong>y2k top</strong> &nbsp;<span style="color:#ff2300;font-weight:700">50.0% sold</span> <span style="color:#888;font-size:12px">(21 of 42)</span></div><div><strong>vintage jacket</strong> &nbsp;<span style="color:#ff2300;font-weight:700">47.8% sold</span> <span style="color:#888;font-size:12px">(22 of 46)</span></div>
   </div>
 </div>
 </header>
 
 <div class="stats">
-  <div class="stat"><div class="number">324</div><div class="label">Total Tracked</div></div>
+  <div class="stat"><div class="number">336</div><div class="label">Total Tracked</div></div>
   <div class="stat"><div class="number">159</div><div class="label">Sold Detected</div></div>
-  <div class="stat"><div class="number">49.1%</div><div class="label">Overall Sell-Through</div></div>
+  <div class="stat"><div class="number">47.3%</div><div class="label">Overall Sell-Through</div></div>
   <div class="stat"><div class="number">10</div><div class="label">Unique Brands</div></div>
 </div>
 
@@ -962,7 +962,7 @@
     data: { 
       labels: ["vintage shirts", "vintage jacket", "y2k top", "vintage jeans", "band tee", "vintage hoodie", "cargo pants", "baggy jeans"], 
       datasets: [{ 
-        data: [55.0, 51.2, 50.0, 46.7, 46.5, 50.0, 44.7, 48.6], 
+        data: [53.7, 47.8, 50.0, 45.7, 44.4, 47.5, 43.6, 45.9], 
         backgroundColor: '#ff2300',
         label: 'Sell-through %'
       }] 
@@ -971,12 +971,12 @@
   });
   new Chart(document.getElementById('brandsChart'), {
     type: 'bar',
-    data: { labels: ["American Vintage", "Levi's", "Garage", "Gildan", "Old Navy", "Hollister Co.", "Brandy Melville", "Abercrombie & Fitch", "Ralph Lauren", "Gap"], datasets: [{ data: [25, 16, 9, 8, 7, 6, 6, 6, 5, 5], backgroundColor: '#222' }] },
+    data: { labels: ["American Vintage", "Levi's", "Garage", "Gildan", "Old Navy", "Abercrombie & Fitch", "Hollister Co.", "Brandy Melville", "American Eagle Outfitters", "Ralph Lauren"], datasets: [{ data: [26, 16, 9, 8, 7, 7, 6, 6, 6, 5], backgroundColor: '#222' }] },
     options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { maxRotation: 45 } } } }
   });
   new Chart(document.getElementById('priceChart'), {
     type: 'bar',
-    data: { labels: ["vintage jacket", "vintage jeans", "vintage hoodie", "baggy jeans", "vintage shirts", "y2k top", "cargo pants", "band tee"], datasets: [{ data: [29.52, 20.39, 20.26, 17.39, 16.71, 13.88, 11.29, 9.39], backgroundColor: '#ff2300', label: 'Avg $' }] },
+    data: { labels: ["vintage jacket", "vintage jeans", "vintage hoodie", "baggy jeans", "vintage shirts", "cargo pants", "y2k top", "band tee"], datasets: [{ data: [29.25, 20.97, 20.47, 17.4, 16.2, 14.86, 13.88, 9.68], backgroundColor: '#ff2300', label: 'Avg $' }] },
     options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { maxRotation: 45 } }, y: { ticks: { callback: v => '$' + v } } } }
   });
   function filterCards(query, btn) {

@@ -98,6 +98,54 @@ def analyze(all_products):
         "avg_price":   round(sum(prices_clean) / len(prices_clean), 2) if prices_clean else 0,
         "total":       len(all_products),
     }
+def mark_sold_listings_verified(seen_ids, page):
+    import sqlite3
+    from datetime import datetime
+    
+    conn = sqlite3.connect("depop.db")
+    cursor = conn.cursor()
+    today = datetime.now().strftime("%Y-%m-%d")
+    
+    cursor.execute("""
+        SELECT id, link FROM listings 
+        WHERE status = 'available' AND last_seen < ?
+    """, (today,))
+    
+    missing = cursor.fetchall()
+    sold_count = 0
+    not_sold_count = 0
+    
+    print(f"Checking {len(missing)} missing listings...")
+    
+    for (listing_id, link) in missing:
+        if listing_id in seen_ids:
+            continue
+        
+        try:
+            page.goto(link, timeout=10000)
+            page.wait_for_timeout(800)
+            
+            content = page.content()
+            
+            if "SoldOut" in content:
+                cursor.execute("UPDATE listings SET status = 'sold' WHERE id = ?", (listing_id,))
+                cursor.execute("""
+                    INSERT INTO daily_snapshots (listing_id, date, price, status)
+                    VALUES (?, ?, '', 'sold')
+                """, (listing_id, today))
+                sold_count += 1
+            else:
+                not_sold_count += 1
+                
+        except Exception as e:
+            print(f"Error checking {link}: {e}")
+            continue
+        
+        time.sleep(0.5)
+    
+    conn.commit()
+    conn.close()
+    print(f"Verified {sold_count} sold, {not_sold_count} still available")
 
 def main():
     setup_database()
@@ -106,20 +154,22 @@ def main():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
         page = browser.new_page()
+        
         for query in QUERIES:
             products = scrape_query(page, query)
             all_products.extend(products)
             time.sleep(2)
+        
+        # save to database first
+        seen_ids = set()
+        for product in all_products:
+            upsert_listing(product)
+            seen_ids.add(product["id"])
+        
+        # verify sold listings while browser is still open
+        mark_sold_listings_verified(seen_ids, page)
+        
         browser.close()
-    
-    # save to database
-    seen_ids = set()
-    for product in all_products:
-        upsert_listing(product)
-        seen_ids.add(product["id"])
-    
-    # mark anything not seen today as potentially sold
-    mark_sold_listings(seen_ids)
     
     # generate dashboard from database
     stats = get_stats()

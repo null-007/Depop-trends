@@ -36,6 +36,16 @@ def setup_database():
         )
     """)
     
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS trending_searches (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            term TEXT,
+            date TEXT,
+            listing_count INTEGER DEFAULT 0,
+            sold_count INTEGER DEFAULT 0
+        )
+    """)
+    
     conn.commit()
     conn.close()
     print("Database ready.")
@@ -100,6 +110,64 @@ def mark_sold_listings(seen_ids):
     conn.close()
     print(f"Marked {sold_count} listings as sold.")
 
+def save_trending_term(term, listing_count):
+    conn = get_connection()
+    cursor = conn.cursor()
+    today = datetime.now().strftime("%Y-%m-%d")
+    
+    cursor.execute("""
+        SELECT id FROM trending_searches WHERE term = ? AND date = ?
+    """, (term, today))
+    existing = cursor.fetchone()
+    
+    if existing:
+        cursor.execute("""
+            UPDATE trending_searches SET listing_count = ? WHERE term = ? AND date = ?
+        """, (listing_count, term, today))
+    else:
+        cursor.execute("""
+            INSERT INTO trending_searches (term, date, listing_count)
+            VALUES (?, ?, ?)
+        """, (term, today, listing_count))
+    
+    conn.commit()
+    conn.close()
+
+def get_weekly_trends():
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    cursor.execute("""
+        SELECT 
+            term,
+            SUM(listing_count) as total_listings,
+            COUNT(DISTINCT date) as days_trending,
+            AVG(listing_count) as avg_daily_listings
+        FROM trending_searches
+        WHERE date >= date('now', '-7 days')
+        GROUP BY term
+        ORDER BY days_trending DESC, total_listings DESC
+        LIMIT 10
+    """)
+    weekly = cursor.fetchall()
+    
+    cursor.execute("""
+        SELECT 
+            query,
+            COUNT(*) as total,
+            SUM(CASE WHEN status = 'sold' THEN 1 ELSE 0 END) as sold,
+            ROUND(SUM(CASE WHEN status = 'sold' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 1) as rate,
+            AVG(CAST(REPLACE(REPLACE(price, '$', ''), ',', '') AS FLOAT)) as avg_price
+        FROM listings
+        WHERE first_seen >= date('now', '-7 days')
+        GROUP BY query
+        ORDER BY rate DESC
+    """)
+    sell_through = cursor.fetchall()
+    
+    conn.close()
+    return weekly, sell_through
+
 def get_stats():
     conn = get_connection()
     cursor = conn.cursor()
@@ -147,6 +215,7 @@ def get_stats():
         LIMIT 48
     """)
     recent = cursor.fetchall()
+    
     cursor.execute("""
         SELECT brand, size, price, query, image, link
         FROM listings
@@ -158,8 +227,6 @@ def get_stats():
     
     conn.close()
     
-    from datetime import datetime
-
     return {
         "sell_through": sell_through,
         "top_brands": top_brands,
@@ -174,7 +241,6 @@ def get_trending_categories():
     conn = get_connection()
     cursor = conn.cursor()
     
-    # only consider categories with at least 5 tracked listings
     cursor.execute("""
         SELECT query,
                COUNT(*) as total,
@@ -189,5 +255,6 @@ def get_trending_categories():
     results = cursor.fetchall()
     conn.close()
     return results
+
 if __name__ == "__main__":
     setup_database()

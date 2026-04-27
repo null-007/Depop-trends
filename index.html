@@ -39,26 +39,54 @@
   .tab.active { background: white; color: #ff2300; }
   .tab-content { display: none; }
   .tab-content.active { display: block; }
+  .dark-toggle { position: fixed; top: 16px; right: 24px; z-index: 100; background: rgba(255,255,255,0.2); border: none; border-radius: 20px; padding: 6px 14px; color: white; font-size: 13px; cursor: pointer; }
+  body.dark { background: #1a1a1a; color: #eee; }
+  body.dark header { background: #cc1c00; }
+  body.dark .stat { background: #2a2a2a; }
+  body.dark .stat .label { color: #aaa; }
+  body.dark .chart-box { background: #2a2a2a; }
+  body.dark .chart-box h2 { color: #eee; }
+  body.dark .card { background: #2a2a2a; color: #eee; }
+  body.dark .brand { color: #eee; }
+  body.dark .size { color: #aaa; }
+  body.dark .filter-btn { background: #2a2a2a; border-color: #444; color: #eee; }
+  body.dark .filter-btn.active { background: #ff2300; color: white; }
+  body.dark .tab { background: #333; color: #aaa; }
+  body.dark .tab.active { background: #2a2a2a; color: #ff2300; }
+  body.dark .section-title { color: #eee; }
+  body.dark .filters { background: transparent; }
+  body.dark .hot-right-now { background: #2a2a2a; border-left: 4px solid #ff2300; }
+  body.dark .hot-right-now div { color: #eee; }
+  .search-bar { padding: 0 32px 16px; }
+  .search-bar input { width: 100%; padding: 10px 16px; border-radius: 20px; border: 1.5px solid #ddd; font-size: 14px; outline: none; }
+  .search-bar input:focus { border-color: #ff2300; }
+  body.dark .search-bar input { background: #2a2a2a; border-color: #444; color: #eee; }
+  .sort-bar { padding: 0 32px 16px; display: flex; align-items: center; gap: 12px; }
+  .sort-bar label { font-size: 13px; color: #888; }
+  .sort-bar select { padding: 6px 12px; border-radius: 20px; border: 1.5px solid #ddd; font-size: 13px; cursor: pointer; outline: none; }
+  .sort-bar select:focus { border-color: #ff2300; }
+  body.dark .sort-bar select { background: #2a2a2a; border-color: #444; color: #eee; }
 </style>
 </head>
 <body>
 <header>
   <h1>Depop Trend Dashboard</h1>
-  <p>336 listings tracked &nbsp;·&nbsp; 159 sold detected &nbsp;·&nbsp; Last updated: April 27, 2026 at 12:26 PM</p>
+  <p>402 listings tracked &nbsp;·&nbsp; 158 sold detected &nbsp;·&nbsp; Last updated: April 27, 2026 at 01:22 PM</p>
+  <button class="dark-toggle" onclick="toggleDark()">🌙 Dark mode</button>
 </header>
 
-<div style="background: #fff8f7; border-left: 4px solid #ff2300; margin: 24px 32px 0; padding: 16px 20px; border-radius: 8px;">
+<div class="hot-right-now" style="border-left: 4px solid #ff2300; margin: 24px 32px 0; padding: 16px 20px; border-radius: 8px;">
   <div style="font-weight: 700; font-size: 14px; color: #ff2300; margin-bottom: 8px;">🔥 Hot right now</div>
   <div style="display: flex; gap: 24px; flex-wrap: wrap;">
-    <div><strong>vintage shirts</strong> &nbsp;<span style="color:#ff2300;font-weight:700">53.7% sold</span> <span style="color:#888;font-size:12px">(22 of 41)</span></div><div><strong>y2k top</strong> &nbsp;<span style="color:#ff2300;font-weight:700">50.0% sold</span> <span style="color:#888;font-size:12px">(21 of 42)</span></div><div><strong>vintage jacket</strong> &nbsp;<span style="color:#ff2300;font-weight:700">47.8% sold</span> <span style="color:#888;font-size:12px">(22 of 46)</span></div>
+    <div><strong>vintage shirts</strong> &nbsp;<span style="color:#ff2300;font-weight:700">52.4% sold</span> <span style="color:#888;font-size:12px">(22 of 42)</span></div><div><strong>vintage hoodie</strong> &nbsp;<span style="color:#ff2300;font-weight:700">47.5% sold</span> <span style="color:#888;font-size:12px">(19 of 40)</span></div><div><strong>vintage jacket</strong> &nbsp;<span style="color:#ff2300;font-weight:700">45.8% sold</span> <span style="color:#888;font-size:12px">(22 of 48)</span></div>
   </div>
 </div>
 </header>
 
 <div class="stats">
-  <div class="stat"><div class="number">336</div><div class="label">Total Tracked</div></div>
-  <div class="stat"><div class="number">159</div><div class="label">Sold Detected</div></div>
-  <div class="stat"><div class="number">47.3%</div><div class="label">Overall Sell-Through</div></div>
+  <div class="stat"><div class="number">402</div><div class="label">Total Tracked</div></div>
+  <div class="stat"><div class="number">158</div><div class="label">Sold Detected</div></div>
+  <div class="stat"><div class="number">39.3%</div><div class="label">Overall Sell-Through</div></div>
   <div class="stat"><div class="number">10</div><div class="label">Unique Brands</div></div>
 </div>
 
@@ -74,14 +102,27 @@
 
 <div class="tabs">
   <button class="tab active" onclick="switchTab('available', this)">Available Listings</button>
-  <button class="tab" onclick="switchTab('sold', this)">Sold Listings (159)</button>
+  <button class="tab" onclick="switchTab('sold', this)">Sold Listings (158)</button>
+  <button class="tab" onclick="switchTab('trending', this)">📈 Trending This Week</button>
 </div>
 
 <div id="available" class="tab-content active">
   <div class="filters" style="padding-top: 16px;">
     <span class="filter-label">Filter by:</span>
     <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
-    <button class='filter-btn' onclick="filterCards('vintage shirts', this)">vintage shirts</button><button class='filter-btn' onclick="filterCards('vintage jeans', this)">vintage jeans</button><button class='filter-btn' onclick="filterCards('vintage jacket', this)">vintage jacket</button><button class='filter-btn' onclick="filterCards('y2k top', this)">y2k top</button><button class='filter-btn' onclick="filterCards('baggy jeans', this)">baggy jeans</button><button class='filter-btn' onclick="filterCards('vintage hoodie', this)">vintage hoodie</button><button class='filter-btn' onclick="filterCards('cargo pants', this)">cargo pants</button><button class='filter-btn' onclick="filterCards('band tee', this)">band tee</button>
+    <button class='filter-btn' onclick="filterCards('vintage shirts', this)">vintage shirts</button><button class='filter-btn' onclick="filterCards('vintage jeans', this)">vintage jeans</button><button class='filter-btn' onclick="filterCards('vintage jacket', this)">vintage jacket</button><button class='filter-btn' onclick="filterCards('y2k top', this)">y2k top</button><button class='filter-btn' onclick="filterCards('baggy jeans', this)">baggy jeans</button><button class='filter-btn' onclick="filterCards('vintage hoodie', this)">vintage hoodie</button><button class='filter-btn' onclick="filterCards('cargo pants', this)">cargo pants</button><button class='filter-btn' onclick="filterCards('band tee', this)">band tee</button><button class='filter-btn' onclick="filterCards('lululemon define jacket', this)">lululemon define jacket</button><button class='filter-btn' onclick="filterCards('carhartt jacket', this)">carhartt jacket</button><button class='filter-btn' onclick="filterCards('essentials hoodie', this)">essentials hoodie</button><button class='filter-btn' onclick="filterCards('vintage t shirt', this)">vintage t shirt</button>
+  </div>
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search by brand, size, price..." oninput="searchCards(this.value)">
+  </div>
+  <div class="sort-bar">
+    <label>Sort by:</label>
+    <select onchange="sortCards(this.value)">
+      <option value="default">Default</option>
+      <option value="price-low">Price: Low to High</option>
+      <option value="price-high">Price: High to Low</option>
+      <option value="brand">Brand A-Z</option>
+    </select>
   </div>
   <div class="section-title" style="padding-top: 16px;">Recent Listings</div>
   <div class="grid" id="available-grid">
@@ -253,6 +294,15 @@
                 <span class="brand">Other</span>
                 <span class="size">XS</span>
                 <span class="price">$7.00</span>
+                <span class="query-tag">cargo pants</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/tiqnna1445-garage-light-purple-cargo-sweatpants-8e67/" target="_blank" class="card" data-query="cargo pants">
+            <img src="https://media-photos.depop.com/b1/23149481/3676688595_a5f33cf99bf64408b414f4d3fba1d84e/P8.jpg" alt="Garage" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Garage</span>
+                <span class="size">M</span>
+                <span class="price">$10.00</span>
                 <span class="query-tag">cargo pants</span>
             </div>
         </a>
@@ -505,15 +555,6 @@
                 <span class="brand">Levi's</span>
                 <span class="size">36"</span>
                 <span class="price">$30.00</span>
-                <span class="query-tag">vintage jeans</span>
-            </div>
-        </a>
-        <a href="https://www.depop.com/products/kkendalb804-amethyst-blue-low-rise-flare-b663/" target="_blank" class="card" data-query="vintage jeans">
-            <img src="https://media-photos.depop.com/r1/250948145/3704693037_129ae09ba9604fba84b13d7899552e59/P8.jpg" alt="Other" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
-            <div class="card-info">
-                <span class="brand">Other</span>
-                <span class="size">3</span>
-                <span class="price">$16.00</span>
                 <span class="query-tag">vintage jeans</span>
             </div>
         </a></div>
@@ -956,13 +997,125 @@
         </a></div>
 </div>
 
+<div id="trending" class="tab-content">
+  <div class="section-title" style="padding: 24px 32px 16px;">Trending This Week</div>
+  <div style="padding: 0 32px 32px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+    
+        <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);">
+            <div style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">🔍 baggy jeans</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">20</div>
+                    <div style="font-size: 11px; color: #888;">avg daily listings</div>
+                </div>
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">41.5%</div>
+                    <div style="font-size: 11px; color: #888;">sell-through rate</div>
+                </div>
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">$19.13</div>
+                    <div style="font-size: 11px; color: #888;">avg price</div>
+                </div>
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">1</div>
+                    <div style="font-size: 11px; color: #888;">days trending</div>
+                </div>
+            </div>
+        </div>
+        <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);">
+            <div style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">🔍 lululemon define jacket</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">20</div>
+                    <div style="font-size: 11px; color: #888;">avg daily listings</div>
+                </div>
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">0.0%</div>
+                    <div style="font-size: 11px; color: #888;">sell-through rate</div>
+                </div>
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">$38.22</div>
+                    <div style="font-size: 11px; color: #888;">avg price</div>
+                </div>
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">1</div>
+                    <div style="font-size: 11px; color: #888;">days trending</div>
+                </div>
+            </div>
+        </div>
+        <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);">
+            <div style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">🔍 vintage t shirt</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">15</div>
+                    <div style="font-size: 11px; color: #888;">avg daily listings</div>
+                </div>
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">0.0%</div>
+                    <div style="font-size: 11px; color: #888;">sell-through rate</div>
+                </div>
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">$14.57</div>
+                    <div style="font-size: 11px; color: #888;">avg price</div>
+                </div>
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">1</div>
+                    <div style="font-size: 11px; color: #888;">days trending</div>
+                </div>
+            </div>
+        </div>
+        <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);">
+            <div style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">🔍 carhartt jacket</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">14</div>
+                    <div style="font-size: 11px; color: #888;">avg daily listings</div>
+                </div>
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">0.0%</div>
+                    <div style="font-size: 11px; color: #888;">sell-through rate</div>
+                </div>
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">$68.87</div>
+                    <div style="font-size: 11px; color: #888;">avg price</div>
+                </div>
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">1</div>
+                    <div style="font-size: 11px; color: #888;">days trending</div>
+                </div>
+            </div>
+        </div>
+        <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);">
+            <div style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">🔍 essentials hoodie</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">1</div>
+                    <div style="font-size: 11px; color: #888;">avg daily listings</div>
+                </div>
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">0.0%</div>
+                    <div style="font-size: 11px; color: #888;">sell-through rate</div>
+                </div>
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">$35.0</div>
+                    <div style="font-size: 11px; color: #888;">avg price</div>
+                </div>
+                <div style="background: #f5f5f5; border-radius: 8px; padding: 10px; text-align: center;">
+                    <div style="font-size: 20px; font-weight: 700; color: #ff2300;">1</div>
+                    <div style="font-size: 11px; color: #888;">days trending</div>
+                </div>
+            </div>
+        </div>
+  </div>
+</div>
+
 <script>
   new Chart(document.getElementById('sellThroughChart'), {
     type: 'bar',
     data: { 
-      labels: ["vintage shirts", "vintage jacket", "y2k top", "vintage jeans", "band tee", "vintage hoodie", "cargo pants", "baggy jeans"], 
+      labels: ["vintage shirts", "vintage jacket", "y2k top", "vintage jeans", "band tee", "vintage hoodie", "baggy jeans", "cargo pants", "vintage t shirt", "lululemon define jacket", "essentials hoodie", "carhartt jacket"], 
       datasets: [{ 
-        data: [53.7, 47.8, 50.0, 45.7, 44.4, 47.5, 43.6, 45.9], 
+        data: [52.4, 45.8, 45.7, 45.7, 44.4, 47.5, 41.5, 40.0, 0.0, 0.0, 0.0, 0.0], 
         backgroundColor: '#ff2300',
         label: 'Sell-through %'
       }] 
@@ -971,12 +1124,12 @@
   });
   new Chart(document.getElementById('brandsChart'), {
     type: 'bar',
-    data: { labels: ["American Vintage", "Levi's", "Garage", "Gildan", "Old Navy", "Abercrombie & Fitch", "Hollister Co.", "Brandy Melville", "American Eagle Outfitters", "Ralph Lauren"], datasets: [{ data: [26, 16, 9, 8, 7, 7, 6, 6, 6, 5], backgroundColor: '#222' }] },
+    data: { labels: ["American Vintage", "Lululemon", "Carhartt", "Levi's", "Garage", "Gildan", "Abercrombie & Fitch", "Old Navy", "Hollister Co.", "Brandy Melville"], datasets: [{ data: [33, 23, 18, 16, 9, 8, 8, 7, 6, 6], backgroundColor: '#ff2300' }] },
     options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { maxRotation: 45 } } } }
   });
   new Chart(document.getElementById('priceChart'), {
     type: 'bar',
-    data: { labels: ["vintage jacket", "vintage jeans", "vintage hoodie", "baggy jeans", "vintage shirts", "cargo pants", "y2k top", "band tee"], datasets: [{ data: [29.25, 20.97, 20.47, 17.4, 16.2, 14.86, 13.88, 9.68], backgroundColor: '#ff2300', label: 'Avg $' }] },
+    data: { labels: ["carhartt jacket", "lululemon define jacket", "essentials hoodie", "vintage jacket", "vintage jeans", "vintage hoodie", "baggy jeans", "vintage shirts", "y2k top", "vintage t shirt", "cargo pants", "band tee"], datasets: [{ data: [68.87, 38.22, 35.0, 29.11, 20.97, 20.47, 18.5, 16.39, 14.78, 14.57, 14.46, 9.68], backgroundColor: '#ff2300', label: 'Avg $' }] },
     options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { maxRotation: 45 } }, y: { ticks: { callback: v => '$' + v } } } }
   });
   function filterCards(query, btn) {
@@ -995,6 +1148,64 @@
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById(tab).classList.add('active');
+  }
+  function toggleDark() {
+    document.body.classList.toggle('dark');
+    const isDark = document.body.classList.contains('dark');
+    const btn = document.querySelector('.dark-toggle');
+    btn.textContent = isDark ? '☀️ Light mode' : '🌙 Dark mode';
+    localStorage.setItem('darkMode', isDark);
+    updateChartColors(isDark);
+  }
+  
+  function updateChartColors(isDark) {
+    Chart.instances.forEach(chart => {
+      chart.data.datasets.forEach(dataset => {
+        if (dataset.backgroundColor === '#ff2300' || dataset.backgroundColor === '#222' || dataset.backgroundColor === 'black') {
+          dataset.backgroundColor = dataset.label === 'Avg $' || dataset.label === 'Sell-through %' ? '#ff2300' : (isDark ? '#ff2300' : '#222');
+        }
+      });
+      chart.options.scales.x.ticks.color = isDark ? '#aaa' : '#666';
+      chart.options.scales.y.ticks.color = isDark ? '#aaa' : '#666';
+      chart.update();
+    });
+  }
+  
+  if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark');
+    document.querySelector('.dark-toggle').textContent = '☀️ Light mode';
+    updateChartColors(true);
+  }
+  function searchCards(query) {
+    const q = query.toLowerCase();
+    document.querySelectorAll('#available-grid .card').forEach(card => {
+      const text = card.innerText.toLowerCase();
+      if (text.includes(q)) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+  }
+  function sortCards(method) {
+    const grid = document.getElementById('available-grid');
+    const cards = Array.from(grid.querySelectorAll('.card'));
+    
+    cards.sort((a, b) => {
+      if (method === 'price-low' || method === 'price-high') {
+        const priceA = parseFloat(a.querySelector('.price').innerText.replace('$', '')) || 0;
+        const priceB = parseFloat(b.querySelector('.price').innerText.replace('$', '')) || 0;
+        return method === 'price-low' ? priceA - priceB : priceB - priceA;
+      }
+      if (method === 'brand') {
+        const brandA = a.querySelector('.brand').innerText.toLowerCase();
+        const brandB = b.querySelector('.brand').innerText.toLowerCase();
+        return brandA.localeCompare(brandB);
+      }
+      return 0;
+    });
+    
+    cards.forEach(card => grid.appendChild(card));
   }
 </script>
 </script>

@@ -1,6 +1,13 @@
 import json
 from database import get_trending_categories
 
+def get_filter_buttons(queries):
+    buttons = []
+    for q in queries:
+        btn = f"<button class='filter-btn' onclick=\"filterCards('{q}', this)\">{q}</button>"
+        buttons.append(btn)
+    return ''.join(buttons)
+
 
 def generate_dashboard(stats, queries):
     trending = get_trending_categories()
@@ -106,7 +113,7 @@ def generate_dashboard(stats, queries):
 <div class="filters">
   <span class="filter-label">Filter by:</span>
   <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
-    {''.join(f"<button class='filter-btn' onclick=\"filterCards('{q}', this)\">{q}</button>" for q in queries)}
+    {get_filter_buttons(queries)}
 </div>
 
 <div class="section-title">Recent Listings</div>

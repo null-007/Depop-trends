@@ -34,24 +34,29 @@
   .filter-btn.active { background: #ff2300; color: white; border-color: #ff2300; }
   .filter-label { font-size: 13px; color: #888; margin-right: 4px; }
   .card.hidden { display: none; }
+  .tabs { display: flex; gap: 0; padding: 24px 32px 0; }
+  .tab { padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 8px 8px 0 0; background: #e0e0e0; color: #666; border: none; }
+  .tab.active { background: white; color: #ff2300; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
 </style>
 </head>
 <body>
 <header>
   <h1>Depop Trend Dashboard</h1>
-    <p>309 listings tracked &nbsp;·&nbsp; 161 sold detected &nbsp;·&nbsp; Last updated: April 27, 2026 at 03:45 PM</p>
+    <p>319 listings tracked &nbsp;·&nbsp; 159 sold detected &nbsp;·&nbsp; Last updated: April 27, 2026 at 12:05 PM</p>
     <div style="background: #fff8f7; border-left: 4px solid #ff2300; margin: 24px 32px 0; padding: 16px 20px; border-radius: 8px;">
   <div style="font-weight: 700; font-size: 14px; color: #ff2300; margin-bottom: 8px;">🔥 Hot right now</div>
   <div style="display: flex; gap: 24px; flex-wrap: wrap;">
-    <div><strong>vintage shirts</strong> &nbsp;<span style="color:#ff2300;font-weight:700">56.4% sold</span> <span style="color:#888;font-size:12px">(22 of 39)</span></div><div><strong>vintage hoodie</strong> &nbsp;<span style="color:#ff2300;font-weight:700">54.3% sold</span> <span style="color:#888;font-size:12px">(19 of 35)</span></div><div><strong>vintage jacket</strong> &nbsp;<span style="color:#ff2300;font-weight:700">53.7% sold</span> <span style="color:#888;font-size:12px">(22 of 41)</span></div>
+    <div><strong>vintage shirts</strong> &nbsp;<span style="color:#ff2300;font-weight:700">55.0% sold</span> <span style="color:#888;font-size:12px">(22 of 40)</span></div><div><strong>vintage jacket</strong> &nbsp;<span style="color:#ff2300;font-weight:700">53.7% sold</span> <span style="color:#888;font-size:12px">(22 of 41)</span></div><div><strong>vintage hoodie</strong> &nbsp;<span style="color:#ff2300;font-weight:700">51.4% sold</span> <span style="color:#888;font-size:12px">(19 of 37)</span></div>
   </div>
 </div>
 </header>
 
 <div class="stats">
-  <div class="stat"><div class="number">309</div><div class="label">Total Tracked</div></div>
-  <div class="stat"><div class="number">161</div><div class="label">Sold Detected</div></div>
-  <div class="stat"><div class="number">52.1%</div><div class="label">Overall Sell-Through</div></div>
+  <div class="stat"><div class="number">319</div><div class="label">Total Tracked</div></div>
+  <div class="stat"><div class="number">159</div><div class="label">Sold Detected</div></div>
+  <div class="stat"><div class="number">49.8%</div><div class="label">Overall Sell-Through</div></div>
   <div class="stat"><div class="number">10</div><div class="label">Unique Brands</div></div>
 </div>
 
@@ -65,14 +70,19 @@
   <div class="chart-box"><h2>Average Price by Category</h2><canvas id="priceChart"></canvas></div>
 </div>
 
-<div class="filters">
-  <span class="filter-label">Filter by:</span>
-  <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
-    <button class='filter-btn' onclick="filterCards('vintage shirts', this)">vintage shirts</button><button class='filter-btn' onclick="filterCards('vintage jeans', this)">vintage jeans</button><button class='filter-btn' onclick="filterCards('vintage jacket', this)">vintage jacket</button><button class='filter-btn' onclick="filterCards('y2k top', this)">y2k top</button><button class='filter-btn' onclick="filterCards('baggy jeans', this)">baggy jeans</button><button class='filter-btn' onclick="filterCards('vintage hoodie', this)">vintage hoodie</button><button class='filter-btn' onclick="filterCards('cargo pants', this)">cargo pants</button><button class='filter-btn' onclick="filterCards('band tee', this)">band tee</button>
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('available', this)">Available Listings</button>
+  <button class="tab" onclick="switchTab('sold', this)">Sold Listings (159)</button>
 </div>
 
-<div class="section-title">Recent Listings</div>
-<div class="grid">
+<div id="available" class="tab-content active">
+  <div class="filters" style="padding-top: 16px;">
+    <span class="filter-label">Filter by:</span>
+    <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+    <button class='filter-btn' onclick="filterCards('vintage shirts', this)">vintage shirts</button><button class='filter-btn' onclick="filterCards('vintage jeans', this)">vintage jeans</button><button class='filter-btn' onclick="filterCards('vintage jacket', this)">vintage jacket</button><button class='filter-btn' onclick="filterCards('y2k top', this)">y2k top</button><button class='filter-btn' onclick="filterCards('baggy jeans', this)">baggy jeans</button><button class='filter-btn' onclick="filterCards('vintage hoodie', this)">vintage hoodie</button><button class='filter-btn' onclick="filterCards('cargo pants', this)">cargo pants</button><button class='filter-btn' onclick="filterCards('band tee', this)">band tee</button>
+  </div>
+  <div class="section-title" style="padding-top: 16px;">Recent Listings</div>
+  <div class="grid" id="available-grid">
         <a href="https://www.depop.com/products/redrockvntb-vintage-y2k-arrow-plaid-button-46cd/" target="_blank" class="card" data-query="vintage shirts">
             <img src="https://media-photos.depop.com/b1/41447391/3691171015_c72d4930d73e44ceaef8eddc7945e4fe/P8.jpg" alt="Arrow" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
             <div class="card-info">
@@ -89,6 +99,15 @@
                 <span class="size">M</span>
                 <span class="price">$29.00</span>
                 <span class="query-tag">vintage shirts</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/t0vtg-2000s-vintage-levis-bootcut-denim-2660/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/43745172/3689918827_ca18c7ac47f942c9b51f52463b2adafb/P8.jpg" alt="Levi's" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Levi's</span>
+                <span class="size">36"</span>
+                <span class="price">$24.99</span>
+                <span class="query-tag">vintage jeans</span>
             </div>
         </a>
         <a href="https://www.depop.com/products/willa0th-womans-y2k-vintage-ultra-low-5148/" target="_blank" class="card" data-query="vintage jeans">
@@ -232,6 +251,15 @@
                 <span class="brand">Other</span>
                 <span class="size">XS</span>
                 <span class="price">$7.00</span>
+                <span class="query-tag">cargo pants</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/kmmcldsett-garage-dark-grey-cargo-sweatpants-5a12/" target="_blank" class="card" data-query="cargo pants">
+            <img src="https://media-photos.depop.com/b1/48028985/3677381361_f2db8e99e3de40aea4060ca8c76b20b1/P8.jpg" alt="Garage" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Garage</span>
+                <span class="size">S</span>
+                <span class="price">$14.00</span>
                 <span class="query-tag">cargo pants</span>
             </div>
         </a>
@@ -486,33 +514,453 @@
                 <span class="price">$16.00</span>
                 <span class="query-tag">vintage jeans</span>
             </div>
-        </a>
-        <a href="https://www.depop.com/products/stvr12r-super-y2k-low-rise-2000s-5cee/" target="_blank" class="card" data-query="vintage jeans">
-            <img src="https://media-photos.depop.com/b1/17456521/3693564528_f4aa178c616e4b629b3d6c51e67c99dc/P8.jpg" alt="Levi's" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+        </a></div>
+</div>
+
+<div id="sold" class="tab-content">
+  <div class="section-title" style="padding: 24px 32px 16px;">Sold Listings</div>
+  <div class="grid">
+        <a href="https://www.depop.com/products/sowdbyrocco-vintage-2000s-y2k-black-boot-1fcf/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/48299678/3684729227_b0c5b898d7a048b090ee4d92303114b8/P8.jpg" alt="Gildan" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
             <div class="card-info">
-                <span class="brand">Levi's</span>
-                <span class="size">1</span>
-                <span class="price">$23.00</span>
-                <span class="query-tag">vintage jeans</span>
+                <span class="brand">Gildan</span>
+                <span class="size">XL</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$24.99</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
             </div>
         </a>
-        <a href="https://www.depop.com/products/pastlifevint3ge__-levis-501-blue-jeans-40x30-08d3/" target="_blank" class="card" data-query="vintage jeans">
-            <img src="https://media-photos.depop.com/r1/415254140/3690956352_a98de880823141cc901293bd542e0592/P8.jpg" alt="Levi's" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+        <a href="https://www.depop.com/products/thevintagnblock-vintage-early-2000s-y2k-aeropostale-9304/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/10098452/3696439199_4b49ea5025704b1aa1e2c2dc4ea1cdde/P8.jpg" alt="Aeropostale" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Aeropostale</span>
+                <span class="size">M</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$19.99</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/dicgorea_-vintage-multicolor-plaid-button-up-shirt-b343/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/13978731/3693089262_2978f5a1ae514320a6fa2ae4bb3003dc/P8.jpg" alt="Other" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Other</span>
+                <span class="size">S</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$18.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/mishylds-vintage-sheer-bowling-style-polo-98a1/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/228356295/3693694659_296dd13cd4f4416c813fbbf3bb83b8a6/P8.jpg" alt="Other" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Other</span>
+                <span class="size">L</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$7.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/b00m-vintage-60s-westbound-multicoloured-plaid-e6d9/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/22137699/3696687912_8d11c5997c9b43fc908f777ab474dc8e/P8.jpg" alt="Westbound" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Westbound</span>
+                <span class="size">L</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$19.99</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/pwriighl-dope-boxy-cropped-red-and-ed64/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/341701059/3692469821_41c60f9153b4487095c609bc801b144e/P8.jpg" alt="Van Heusen" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Van Heusen</span>
+                <span class="size">M</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$14.99</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/tetsat828-thomas-dean-button-up-shirt-b47b/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/351369935/3700578689_dd294a5ad0694c198de9a5e508e7b2da/P8.jpg" alt="Other" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Other</span>
+                <span class="size">L</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$9.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/natesvintaguwear-very-nice-vintage-heavy-cotton-3934/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/40595026/3697228276_ca854434af1744a69df810ddb7913e4a/P8.jpg" alt="J.Crew" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">J.Crew</span>
+                <span class="size">M</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$25.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/thecincy8xchange-vintage-preppy-striped-rugby-shirt-78db/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/16505617/3696656780_4006bb29ba9d41a29e03a150de2c996b/P8.jpg" alt="Club Room" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Club Room</span>
+                <span class="size">L</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$21.99</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/livjngmorganism-a-capsule-closer-must-have-34c8/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/15672660/3697510306_c6cff99b37924c0ba6572a37c1170dac/P8.jpg" alt="Route 66" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Route 66</span>
+                <span class="size">M</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$11.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/adr8ano0-vintage-abercrombie-fitch-grey-53a4/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/49600980/3696811984_207157fb81454cb8b1e0af79d7d8c1bf/P8.jpg" alt="Abercrombie & Fitch" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Abercrombie & Fitch</span>
+                <span class="size">L</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$21.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/pass4rwrd-vintage-60s70s-mod-disco-collar-6913/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/17403105/3685433802_5a41317a05f34661956f46de803f0933/P8.jpg" alt="Other" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Other</span>
+                <span class="size">L</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$27.99</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/natesvintzgewear-vintage-90s-rayon-button-up-a3d2/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/40595026/3688611777_d268031dadd347d1ba5b74b22ada6106/P8.jpg" alt="Other" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Other</span>
+                <span class="size">L</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$15.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/ayvejsshops-vintage-red-button-up-thermal-664a/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/36224657/3698195705_72800db6ea134b249b9ce5bf13367ee9/P8.jpg" alt="Old Navy" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Old Navy</span>
+                <span class="size">M</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$8.50</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/miluennium_vintage-realtree-camo-long-sleeve-shirt-32d4/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/43581005/3700868567_890f78b1b2a140bdb82041702311efa9/P8.jpg" alt="Realtree" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Realtree</span>
+                <span class="size">S</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$5.99</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/mxg1cant-vintage-barnes-storm-patterned-button-f31c/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/48271075/3684510043_84484d3241164b6ca36241120d7df063/P8.jpg" alt="Other" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Other</span>
+                <span class="size">M</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$20.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/r0pamrfia-forrest-green-vintage-wrangler-pearl-1eb5/" target="_blank" class="card" data-query="vintage shirts">
+            <img src="https://media-photos.depop.com/b1/40130136/3689415573_3113e8bffa2d4fa8a59dd9153cf93f0f/P8.jpg" alt="Wrangler" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Wrangler</span>
+                <span class="size">L</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$15.99</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/alexandrau718_-vintage-bke-low-rise-flare-9f73/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/444129294/3696090637_6c21b9d1f03846e89a8eb14268f19e1b/P8.jpg" alt="BKE" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">BKE</span>
+                <span class="size">Other</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$22.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/srv_zaura-american-eagle-vintage-blue-bootcut-5653/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/339338598/3697820616_c57da75c2f684847b2607bec8b8a6358/P8.jpg" alt="American Eagle Outfitters" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">American Eagle Outfitters</span>
+                <span class="size">4</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$10.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/ellena04pm-y2k-vintage-tommy-hilfiger-jeans-ee19/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/208102826/3685234718_a87521306e2a4e9b83821312851a8fea/P8.jpg" alt="Tommy Hilfiger" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Tommy Hilfiger</span>
+                <span class="size">5</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$18.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/thevintage9lock-vintage-2000s-y2k-miss-me-8f13/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/10098452/3693903833_982d07c25ba841fdac2ed3013d70c0aa/P8.jpg" alt="Miss Me" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Miss Me</span>
+                <span class="size">24"</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$24.99</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/denim_aod_dust_vntg-baggy-utility-light-wash-jeans-5019/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/45281662/3689774283_fb998e831ec743b3bc64131fd08131e9/P8.jpg" alt="Utility" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Utility</span>
+                <span class="size">38"</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$15.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/be0ksun-vintage-black-faded-dodeca-loose-d897/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/r1/40354135/3693877734_6d9c66c15d8f48eb85c75795bb2ccaac/P8.jpg" alt="American Vintage" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">American Vintage</span>
+                <span class="size">34"</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$20.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/leveln3ne-vintage-90s-abercrombie-and-fitch-b483/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/34918491/3700778617_90ad9ede71184d5ab3be7392468634dd/P8.jpg" alt="Abercrombie & Fitch" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Abercrombie & Fitch</span>
+                <span class="size">36"</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$40.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/evil_twwnk-2000s-baggy-flare-jeans-beautiful-c5c1/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/32079371/3697599171_53d7abb13e9040949e368eb5b27f3089/P8.jpg" alt="American Vintage" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">American Vintage</span>
+                <span class="size">4</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$22.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/emilyvody2k-american-eagle-vintage-low-rise-347b/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/45931617/3691044153_f92ffac421f646ac94b787f412f28cd4/P8.jpg" alt="American Eagle Outfitters" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">American Eagle Outfitters</span>
+                <span class="size">8</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$15.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/shurcedbytato-vintage-2000s-low-rise-bootcut-a9c9/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/44082462/3696370419_e03eb9b8ac2043229c134d86b1096cbd/P8.jpg" alt="American Vintage" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">American Vintage</span>
+                <span class="size">29"</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$26.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/812stomagefindz-vintage-80s-levis-505-blue-a76c/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/391543497/3694205823_4c8bce8c1d264fe7a454c49584434880/P8.jpg" alt="Levi's" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
             <div class="card-info">
                 <span class="brand">Levi's</span>
-                <span class="size">40"</span>
-                <span class="price">$11.00</span>
-                <span class="query-tag">vintage jeans</span>
+                <span class="size">36"</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$20.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/crsecopdhand-vintage-denim-white-tab-levis-8da6/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/40538649/3698892400_6c46ae2a06e24d56a825fb549d2973b5/P8.jpg" alt="Levi's" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Levi's</span>
+                <span class="size">36"</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$24.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/jpvintapes-baggy-wideleg-vintage-y2k-dark-940d/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/363771234/3700494286_42dab33337be4682a64b0d0dae0e68e0/P8.jpg" alt="Levi's" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Levi's</span>
+                <span class="size">34"</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$15.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/goos7ykyun-vintage-y2k-polo-jeans-co-1fd4/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/45547276/3693870346_71fb12029992440c91fce1d8a66a1345/P8.jpg" alt="Polo Ralph Lauren" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Polo Ralph Lauren</span>
+                <span class="size">12</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$26.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/evil_tbink-vintage-2000s-baggy-bootcut-jeans-beba/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/32079371/3697580744_1b3167ed3abe48659ae72261f51bb609/P8.jpg" alt="American Vintage" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">American Vintage</span>
+                <span class="size">30"</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$25.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/truckerdyet-y2k-gap-1969-relaxed-straight-7532/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/229581665/3700401044_69e8621e28234ca19dbd5db849d28ab6/P8.jpg" alt="Gap" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Gap</span>
+                <span class="size">34"</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$16.99</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/taylon_valentine-vintage-lowrise-flare-seven-jeans-88d7/" target="_blank" class="card" data-query="vintage jeans">
+            <img src="https://media-photos.depop.com/b1/48150639/3690348262_b10d2a39dda54e13b11f85c0fc651af3/P8.jpg" alt="Seven7" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Seven7</span>
+                <span class="size">4</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$9.30</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/tonyssuoremestore-vintage-y2k-velvet-izod-lactose-7570/" target="_blank" class="card" data-query="vintage jacket">
+            <img src="https://media-photos.depop.com/b1/307038586/3693296731_7b71d6425d614f7aaf657caef1eb8117/P8.jpg" alt="Izod" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Izod</span>
+                <span class="size">L</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$29.99</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/tonyssuprimestore-y2k-old-navy-grey-zip-b5e5/" target="_blank" class="card" data-query="vintage jacket">
+            <img src="https://media-photos.depop.com/b1/307038586/3693231156_415b5edffdcd438ab1b28f600784e3c7/P8.jpg" alt="Old Navy" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Old Navy</span>
+                <span class="size">XXL</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$24.99</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/tvvtm-90s-vintage-plaid-zip-up-56e3/" target="_blank" class="card" data-query="vintage jacket">
+            <img src="https://media-photos.depop.com/b1/43745172/3693793076_9bee6d906dbb40e6a8da36c059e53528/P8.jpg" alt="Christopher & Banks" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Christopher & Banks</span>
+                <span class="size">S</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$30.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/redroc5vntg-vintage-y2k-red-kap-volkswagen-7d69/" target="_blank" class="card" data-query="vintage jacket">
+            <img src="https://media-photos.depop.com/b1/41447391/3691127313_f381517274d04c1eb08de2b97e1f40e3/P8.jpg" alt="Red Kap" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Red Kap</span>
+                <span class="size">L</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$22.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/tsthr1vts-black-vintage-quiksilver-retro-casual-4903/" target="_blank" class="card" data-query="vintage jacket">
+            <img src="https://media-photos.depop.com/b1/213509184/3697661173_0be634eea5ff4cafbd1e6900b5bf3838/P8.jpg" alt="Quiksilver" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Quiksilver</span>
+                <span class="size">L</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$19.70</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/vandyh017-mens-large-vintage-90s00s-usf-48ee/" target="_blank" class="card" data-query="vintage jacket">
+            <img src="https://media-photos.depop.com/b1/47403922/3696737613_440d4b0ba368402089ca28da4153cf62/P8.jpg" alt="Other" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Other</span>
+                <span class="size">L</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$14.99</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/jaeee_l24-vintage-100-leather-tan-fringe-6e2c/" target="_blank" class="card" data-query="vintage jacket">
+            <img src="https://media-photos.depop.com/r1/375592498/3689891789_706f205d51924824bed3899ed37615a8/P8.jpg" alt="Other" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Other</span>
+                <span class="size">M</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$39.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/kazi_m6r-vintage-90s-pacific-trail-fleece-c157/" target="_blank" class="card" data-query="vintage jacket">
+            <img src="https://media-photos.depop.com/b1/219721204/3696843266_2aaa979c6b6a4c70a4d9725e95ab0beb/P8.jpg" alt="Polo Ralph Lauren" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Polo Ralph Lauren</span>
+                <span class="size">M</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$30.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/a0nsley_drew-vintage-gap-kids-red-carpenter-794d/" target="_blank" class="card" data-query="vintage jacket">
+            <img src="https://media-photos.depop.com/b1/358143124/3692446634_21a4b3da36ed4861bf48dc07ee23d39c/P8.jpg" alt="Gap" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Gap</span>
+                <span class="size">S</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$24.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/byckyardwear-vintage-dodge-truckmaster-lightweight-bomber-d112/" target="_blank" class="card" data-query="vintage jacket">
+            <img src="https://media-photos.depop.com/b1/38919629/3696903903_fd3ce4bf75eb4da48ebc645ff1b3fdca/P8.jpg" alt="Other" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Other</span>
+                <span class="size">XL</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$25.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/mineyrae__-tan-vintage-corduroy-jacket-with-9273/" target="_blank" class="card" data-query="vintage jacket">
+            <img src="https://media-photos.depop.com/b1/20822607/3700518387_de5279b4581f4324a155e4951f070515/P8.jpg" alt="Other" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Other</span>
+                <span class="size">S</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$25.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/addisonzlarey-vintage-champion-detroit-pistons-black-c131/" target="_blank" class="card" data-query="vintage jacket">
+            <img src="https://media-photos.depop.com/b1/51507764/3695895355_5d97c1539d534dce9b1606cb01277abe/P8.jpg" alt="Champion" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Champion</span>
+                <span class="size">M</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$30.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/anja_bbndw-light-blue-denim-jacket-with-accf/" target="_blank" class="card" data-query="vintage jacket">
+            <img src="https://media-photos.depop.com/b1/387889528/3689301870_e0473de7e7a3495da8a92e84f94fb318/P8.jpg" alt="Other" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Other</span>
+                <span class="size">M</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$23.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
+            </div>
+        </a>
+        <a href="https://www.depop.com/products/sounhside_vintage-vintage-tan-leather-sears-leather-c1d3/" target="_blank" class="card" data-query="vintage jacket">
+            <img src="https://media-photos.depop.com/b1/19194804/3693206226_055e85b8b8224ae9b94aafff31ae63db/P8.jpg" alt="Sears" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'"/>
+            <div class="card-info">
+                <span class="brand">Sears</span>
+                <span class="size">S</span>
+                <span class="price" style="color:#888;text-decoration:line-through">$80.00</span>
+                <span class="query-tag" style="background:#ffe0e0;color:#cc0000">sold</span>
             </div>
         </a></div>
+</div>
 
 <script>
   new Chart(document.getElementById('sellThroughChart'), {
     type: 'bar',
     data: { 
-      labels: ["vintage shirts", "vintage jeans", "vintage jacket", "y2k top", "band tee", "vintage hoodie", "cargo pants", "baggy jeans"], 
+      labels: ["vintage shirts", "vintage jacket", "y2k top", "vintage jeans", "band tee", "vintage hoodie", "cargo pants", "baggy jeans"], 
       datasets: [{ 
-        data: [56.4, 52.4, 53.7, 51.2, 50.0, 54.3, 50.0, 48.6], 
+        data: [55.0, 53.7, 50.0, 47.7, 47.6, 51.4, 44.7, 48.6], 
         backgroundColor: '#ff2300',
         label: 'Sell-through %'
       }] 
@@ -521,12 +969,12 @@
   });
   new Chart(document.getElementById('brandsChart'), {
     type: 'bar',
-    data: { labels: ["American Vintage", "Levi's", "Garage", "Gildan", "Old Navy", "Hollister Co.", "Brandy Melville", "Ralph Lauren", "Gap", "American Eagle Outfitters"], datasets: [{ data: [25, 16, 9, 7, 6, 6, 6, 5, 5, 5], backgroundColor: '#222' }] },
+    data: { labels: ["American Vintage", "Levi's", "Garage", "Gildan", "Old Navy", "Hollister Co.", "Brandy Melville", "Abercrombie & Fitch", "Ralph Lauren", "Gap"], datasets: [{ data: [25, 16, 9, 7, 6, 6, 6, 6, 5, 5], backgroundColor: '#222' }] },
     options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { maxRotation: 45 } } } }
   });
   new Chart(document.getElementById('priceChart'), {
     type: 'bar',
-    data: { labels: ["vintage jacket", "vintage jeans", "vintage hoodie", "baggy jeans", "vintage shirts", "y2k top", "cargo pants", "band tee"], datasets: [{ data: [28.42, 20.61, 19.87, 17.39, 16.93, 13.78, 10.61, 9.55], backgroundColor: '#ff2300', label: 'Avg $' }] },
+    data: { labels: ["vintage jacket", "vintage jeans", "vintage hoodie", "baggy jeans", "vintage shirts", "y2k top", "cargo pants", "band tee"], datasets: [{ data: [28.42, 20.75, 20.16, 17.39, 16.71, 13.88, 11.29, 9.36], backgroundColor: '#ff2300', label: 'Avg $' }] },
     options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { maxRotation: 45 } }, y: { ticks: { callback: v => '$' + v } } } }
   });
   function filterCards(query, btn) {
@@ -540,6 +988,13 @@
       }
     });
   }
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(tab).classList.add('active');
+  }
+</script>
 </script>
 </body>
 </html>

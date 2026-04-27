@@ -86,7 +86,7 @@ def generate_dashboard(stats, queries):
   .brand {{ display: block; font-weight: 600; font-size: 14px; }}
   .size {{ display: block; color: #888; font-size: 13px; margin-top: 2px; }}
   .price {{ display: block; font-weight: 700; color: #ff2300; margin-top: 4px; }}
-  .query-tag {{ display: inline-block; margin-top: 8px; background: #f0f0f0; border-radius: 20px; padding: 2px 10px; font-size: 11px; color: #555; }}
+  .query-tag {{ display: inline-block; margin-top: 8px; background: #ff2300; border-radius: 20px; padding: 2px 10px; font-size: 11px; color: white; }}
   .filters {{ display: flex; gap: 12px; padding: 0 32px 24px; flex-wrap: wrap; align-items: center; }}
   .filter-btn {{ background: white; border: 1.5px solid #ddd; border-radius: 20px; padding: 6px 16px; font-size: 13px; cursor: pointer; transition: all 0.2s; }}
   .filter-btn:hover {{ border-color: #ff2300; color: #ff2300; }}
@@ -103,8 +103,10 @@ def generate_dashboard(stats, queries):
 <body>
 <header>
   <h1>Depop Trend Dashboard</h1>
-    <p>{stats['total']} listings tracked &nbsp;·&nbsp; {stats['total_sold']} sold detected &nbsp;·&nbsp; Last updated: {stats['last_updated']}</p>
-    <div style="background: #fff8f7; border-left: 4px solid #ff2300; margin: 24px 32px 0; padding: 16px 20px; border-radius: 8px;">
+  <p>{stats['total']} listings tracked &nbsp;·&nbsp; {stats['total_sold']} sold detected &nbsp;·&nbsp; Last updated: {stats['last_updated']}</p>
+</header>
+
+<div style="background: #fff8f7; border-left: 4px solid #ff2300; margin: 24px 32px 0; padding: 16px 20px; border-radius: 8px;">
   <div style="font-weight: 700; font-size: 14px; color: #ff2300; margin-bottom: 8px;">🔥 Hot right now</div>
   <div style="display: flex; gap: 24px; flex-wrap: wrap;">
     {trending_html}
@@ -183,6 +185,13 @@ def generate_dashboard(stats, queries):
       }}
     }});
   }}
+  function switchTab(tab, btn) {{
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(tab).classList.add('active');
+  }}
+</script>
 </script>
 </body>
 </html>"""
